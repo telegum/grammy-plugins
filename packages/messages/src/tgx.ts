@@ -73,19 +73,24 @@ function tgxToKeyboard(tgx: TgxKeyboardElement): InlineKeyboard {
   const children = tgx.subelements.flatMap(flattenTgx)
 
   for (const child of children) {
-    if (child.type === 'button') {
-      if (child.data)
-        keyboard.text(child.text, child.data)
-      else if (child.url)
-        keyboard.url(child.text, child.url)
-      else
-        throw new Error('Ambiguous JSX button')
-    }
-    else if (child.type === 'br') {
-      keyboard.row()
-    }
-    else {
-      throw new Error(`Only br and button elements are allowed inside a keyboard (found ${child.type})`)
+    switch (child.type) {
+      case 'button':
+        if (child.data)
+          keyboard.text(child.text, child.data)
+        else if (child.url)
+          keyboard.url(child.text, child.url)
+        else
+          throw new Error('Ambiguous JSX button')
+        break
+      case 'br':
+        keyboard.row()
+        break
+      case 'plain':
+        if (typeof child.value === 'boolean' || child.value === null || child.value === undefined)
+          break
+        throw new Error(`Only boolean, null and undefined plain values are allowed inside a keyboard (found ${child.value})`)
+      default:
+        throw new Error(`Only br and button elements are allowed inside a keyboard (found ${child.type})`)
     }
   }
   return keyboard
