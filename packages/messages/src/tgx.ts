@@ -70,7 +70,9 @@ export function tgxToMessageContent(tgx: TgxElement): MessageContent {
 
 function tgxToKeyboard(tgx: TgxKeyboardElement): InlineKeyboard {
   const keyboard = new InlineKeyboard()
-  for (const child of tgx.subelements) {
+  const children = tgx.subelements.flatMap(flattenTgx)
+
+  for (const child of children) {
     if (child.type === 'button') {
       if (child.data)
         keyboard.text(child.text, child.data)
