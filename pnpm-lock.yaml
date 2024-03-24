@@ -39,9 +39,6 @@ importers:
         specifier: ^1.21.1
         version: 1.21.1
     devDependencies:
-      '@grammyjs/types':
-        specifier: ^3.5.2
-        version: 3.5.2
       '@types/node':
         specifier: ^20.11.30
         version: 20.11.30
@@ -61,9 +58,6 @@ importers:
         specifier: ^1.21.1
         version: 1.21.1
     devDependencies:
-      '@grammyjs/types':
-        specifier: ^3.5.2
-        version: 3.5.2
       '@types/node':
         specifier: ^20.11.30
         version: 20.11.30
@@ -538,6 +532,7 @@ packages:
 
   /@grammyjs/types@3.5.2:
     resolution: {integrity: sha512-KZlJcOdgD8N6SMIHWfwmb11L5/L2+rptWBxCexbzNCry/wfLXFFGFniyUrySnvFo+cWMxgy5GuImwY3mhUrP8g==}
+    dev: false
 
   /@humanwhocodes/config-array@0.11.14:
     resolution: {integrity: sha512-3T8LkOmg45BV5FICb15QQMsyUSWrQ8AygVfC7ZG32zOalnqrilm018ZVCw0eapXux8FtA33q8PSRSstjee3jSg==}

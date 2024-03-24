@@ -29,7 +29,6 @@
     "grammy": "^1.21.1"
   },
   "devDependencies": {
-    "@grammyjs/types": "^3.5.2",
     "@types/node": "^20.11.30",
     "tsup": "^8.0.2",
     "typescript": "^5.4.3"

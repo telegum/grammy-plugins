@@ -1,5 +1,5 @@
 import type { Api, Context, NextFunction } from 'grammy'
-import type { Message } from '@grammyjs/types'
+import type { Message } from 'grammy/types'
 import type { TgxElement } from '@telegum/tgx'
 import type { EditMessageOptions, MessageContent, SendMessageOptions } from './types'
 import { tgxToMessageContent } from './tgx'

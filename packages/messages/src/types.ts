@@ -1,4 +1,4 @@
-import type { InlineKeyboardMarkup, InputFile, ReplyKeyboardMarkup } from 'grammy/types'
+import type { InlineKeyboardMarkup, InputFile, LinkPreviewOptions, ReplyKeyboardMarkup } from 'grammy/types'
 
 export type MessageContent =
   | MessageTextContent
@@ -26,12 +26,4 @@ export interface SendMessageOptions {
 
 export interface EditMessageOptions {
   linkPreviewOptions?: LinkPreviewOptions
-}
-
-export interface LinkPreviewOptions {
-  disabled?: boolean
-  url?: string
-  preferSmallMedia?: boolean
-  preferLargeMedia?: boolean
-  showAboveText?: boolean
 }
