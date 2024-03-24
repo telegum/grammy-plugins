@@ -1,6 +1,6 @@
 {
   "name": "@telegum/grammy-plugins",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "private": true,
   "packageManager": "pnpm@8.15.5",
   "author": "Vladislav Deryabkin",
