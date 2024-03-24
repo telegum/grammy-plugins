@@ -1,0 +1,37 @@
+{
+  "name": "@telegum/grammy-buttons",
+  "type": "module",
+  "version": "0.0.0",
+  "author": "Vladislav Deryabkin",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/telegum/tgx",
+    "directory": "packages/buttons"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup --format esm,cjs --clean --dts",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "@telegum/tgx": "^0.0.4",
+    "grammy": "^1.21.1"
+  },
+  "devDependencies": {
+    "@grammyjs/types": "^3.5.2",
+    "@types/node": "^20.11.30",
+    "tsup": "^8.0.2",
+    "typescript": "^5.4.3"
+  }
+}
