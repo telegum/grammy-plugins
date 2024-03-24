@@ -98,6 +98,7 @@ function sendMessageContent({
           disable_notification: options?.silently,
           protect_content: options?.protectContent,
           link_preview_options: options?.linkPreviewOptions,
+          reply_markup: content.replyMarkup,
         },
       )
     case 'photo':
@@ -111,6 +112,7 @@ function sendMessageContent({
           has_spoiler: content.hasSpoiler,
           disable_notification: options?.silently,
           protect_content: options?.protectContent,
+          reply_markup: content.replyMarkup,
         },
       )
   }
