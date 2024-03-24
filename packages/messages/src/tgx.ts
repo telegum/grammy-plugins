@@ -8,7 +8,7 @@ import { sanitizeHtml } from './sanitize-html'
  * suitable content type.
  */
 export function tgxToMessageContent(tgx: TgxElement): MessageContent {
-  const rootElements = flatTgxDeep(tgx)
+  const rootElements = flattenTgx(tgx)
 
   let keyboard: InlineKeyboard | undefined
   const rest: (TgxTextElement | TgxPlainElement)[] = []
@@ -85,14 +85,14 @@ function tgxToKeyboard(tgx: TgxKeyboardElement): InlineKeyboard {
   return keyboard
 }
 
-function flatTgxDeep(root: TgxElement): (Exclude<TgxElement, TgxFragmentElement>)[] {
+function flattenTgx(root: TgxElement): (Exclude<TgxElement, TgxFragmentElement>)[] {
   const result: (Exclude<TgxElement, TgxFragmentElement>)[] = []
-  const stack: TgxElement[] = [root]
+  const queue: TgxElement[] = [root]
 
-  while (stack.length > 0) {
-    const current = stack.pop()!
+  while (queue.length > 0) {
+    const current = queue.shift()!
     if (current.type === 'fragment')
-      stack.push(...current.subelements)
+      queue.push(...current.subelements)
     else
       result.push(current)
   }
@@ -100,7 +100,7 @@ function flatTgxDeep(root: TgxElement): (Exclude<TgxElement, TgxFragmentElement>
   return result
 }
 
-function tgxToTelegramHtml(tgx: (TgxTextElement | TgxPlainElement)[]): string {
+function tgxToTelegramHtml(tgx: TgxElement[]): string {
   const parts: string[] = []
   for (const element of tgx) {
     if (element.type === 'plain') {
@@ -110,14 +110,17 @@ function tgxToTelegramHtml(tgx: (TgxTextElement | TgxPlainElement)[]): string {
 
       parts.push(sanitizeHtml(String(val)))
     }
-    else {
-      if (element.subelements.some(sub => sub.type !== 'text' && sub.type !== 'plain'))
-        throw new Error('Text element contains non-text and not plain subelements')
-
+    else if (element.type === 'fragment') {
+      parts.push(tgxToTelegramHtml(element.subelements))
+    }
+    else if (element.type === 'text') {
       parts.push(wrapTextWithEntity(
-        tgxToTelegramHtml(element.subelements as (TgxTextElement | TgxPlainElement)[]),
+        tgxToTelegramHtml(element.subelements),
         element.entity,
       ))
+    }
+    else {
+      throw new Error(`Unsupported element type within text: ${element.type}`)
     }
   }
   return parts.join('')
