@@ -97,18 +97,17 @@ function tgxToKeyboard(tgx: TgxKeyboardElement): InlineKeyboard {
 }
 
 function flattenTgx(root: TgxElement): (Exclude<TgxElement, TgxFragmentElement>)[] {
-  const result: (Exclude<TgxElement, TgxFragmentElement>)[] = []
-  const queue: TgxElement[] = [root]
+  const result = [root]
 
-  while (queue.length > 0) {
-    const current = queue.shift()!
-    if (current.type === 'fragment')
-      queue.push(...current.subelements)
-    else
-      result.push(current)
+  for (let i = 0; i < result.length; i++) {
+    const current = result[i]
+    if (current.type === 'fragment') {
+      result.splice(i, 1, ...current.subelements)
+      i--
+    }
   }
 
-  return result
+  return result as (Exclude<TgxElement, TgxFragmentElement>)[]
 }
 
 function tgxToTelegramHtml(tgx: TgxElement[]): string {
