@@ -1,5 +1,5 @@
 import { InlineKeyboard } from 'grammy'
-import type { TextEntity, TgxElement, TgxFragmentElement, TgxKeyboardElement, TgxPhotoElement, TgxPlainElement, TgxTextElement, TgxVideoElement } from '@telegum/tgx'
+import type { TextEntity, TgxBrElement, TgxElement, TgxFragmentElement, TgxKeyboardElement, TgxPhotoElement, TgxPlainElement, TgxTextElement, TgxVideoElement } from '@telegum/tgx'
 import type { MessageContent } from './types'
 import { sanitizeHtml } from './sanitize-html'
 
@@ -11,7 +11,7 @@ export function tgxToMessageContent(tgx: TgxElement): MessageContent {
   const rootElements = flattenTgx(tgx)
 
   let keyboard: InlineKeyboard | undefined
-  const rest: (TgxTextElement | TgxPlainElement)[] = []
+  const rest: (TgxTextElement | TgxPlainElement | TgxBrElement)[] = []
   const photos: TgxPhotoElement[] = []
   const videos: TgxVideoElement[] = []
 
@@ -32,6 +32,7 @@ export function tgxToMessageContent(tgx: TgxElement): MessageContent {
         throw new Error('Button elements can only be used inside a keyboard element')
       case 'text':
       case 'plain':
+      case 'br':
         rest.push(element)
         break
       default:
@@ -78,8 +79,11 @@ function tgxToKeyboard(tgx: TgxKeyboardElement): InlineKeyboard {
       else
         throw new Error('Ambiguous JSX button')
     }
+    else if (child.type === 'br') {
+      keyboard.row()
+    }
     else {
-      throw new Error(`Only button elements are allowed inside a keyboard (found ${child.type})`)
+      throw new Error(`Only br and button elements are allowed inside a keyboard (found ${child.type})`)
     }
   }
   return keyboard
@@ -103,24 +107,26 @@ function flattenTgx(root: TgxElement): (Exclude<TgxElement, TgxFragmentElement>)
 function tgxToTelegramHtml(tgx: TgxElement[]): string {
   const parts: string[] = []
   for (const element of tgx) {
-    if (element.type === 'plain') {
-      const val = element.value
-      if (typeof val === 'boolean' || val === null || val === undefined)
-        continue
-
-      parts.push(sanitizeHtml(String(val)))
-    }
-    else if (element.type === 'fragment') {
-      parts.push(tgxToTelegramHtml(element.subelements))
-    }
-    else if (element.type === 'text') {
-      parts.push(wrapTextWithEntity(
-        tgxToTelegramHtml(element.subelements),
-        element.entity,
-      ))
-    }
-    else {
-      throw new Error(`Unsupported element type within text: ${element.type}`)
+    switch (element.type) {
+      case 'plain':
+        if (typeof element.value === 'boolean' || element.value === null || element.value === undefined)
+          continue
+        parts.push(sanitizeHtml(String(element.value)))
+        break
+      case 'fragment':
+        parts.push(tgxToTelegramHtml(element.subelements))
+        break
+      case 'text':
+        parts.push(wrapTextWithEntity(
+          tgxToTelegramHtml(element.subelements),
+          element.entity,
+        ))
+        break
+      case 'br':
+        parts.push('\n')
+        break
+      default:
+        throw new Error(`Unsupported element type within text: ${element.type}`)
     }
   }
   return parts.join('')
