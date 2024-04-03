@@ -7,6 +7,7 @@ import type { TgxButtonElement } from '@telegum/tgx'
 export interface Button<P = null> {
   (props: (P extends null ? {} : P) & { children: string }): TgxButtonElement
   filter: <C extends Context = Context>(ctx: C) => ctx is (Filter<C, 'callback_query:data'> & { payload: P })
+  data: (payload: P) => string
 }
 
 export function makeButton(options: {
@@ -22,8 +23,10 @@ export function makeButton<P>(options: any): Button<P> {
   const encode = (options.encode ?? (() => '')) as (payload: P) => string
   const decode = (options.decode ?? (() => null)) as (data: string) => P
 
+  const getData = (payload: P) => `${getButtonPrefixById(id)}${encode(payload)}`
+
   const btn = ({ children, ...payload }: any) => (
-    <button data={`${getButtonPrefixById(id)}${encode(payload)}`}>
+    <button data={getData(payload)}>
       {children}
     </button>
   ) as TgxButtonElement
@@ -39,6 +42,8 @@ export function makeButton<P>(options: any): Button<P> {
     }
     return false
   }
+
+  btn.data = getData
 
   return btn
 }
