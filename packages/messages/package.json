@@ -26,7 +26,7 @@
   },
   "peerDependencies": {
     "@telegum/tgx": "^0.1.0",
-    "grammy": "^1.21.1"
+    "grammy": "^1.22.4"
   },
   "devDependencies": {
     "@types/node": "^20.11.30",
