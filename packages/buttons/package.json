@@ -1,7 +1,7 @@
 {
   "name": "@telegum/grammy-buttons",
   "type": "module",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "author": "Vladislav Deryabkin",
   "license": "MIT",
   "repository": {
