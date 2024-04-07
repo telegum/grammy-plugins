@@ -2,7 +2,7 @@
   "name": "@telegum/grammy-plugins",
   "version": "0.3.0",
   "private": true,
-  "packageManager": "pnpm@8.15.5",
+  "packageManager": "pnpm@8.15.6",
   "author": "Vladislav Deryabkin",
   "license": "MIT",
   "scripts": {
@@ -15,7 +15,7 @@
     "release": "bumpp -r"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^2.9.0",
+    "@antfu/eslint-config": "^2.12.2",
     "bumpp": "^9.4.0",
     "eslint": "npm:eslint-ts-patch@8.57.0-0",
     "eslint-plugin-format": "^0.1.0",
