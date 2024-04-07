@@ -1,3 +1,4 @@
+import { GrammyError } from 'grammy'
 import type { Api, Context, NextFunction } from 'grammy'
 import type { Message } from 'grammy/types'
 import type { TgxElement } from '@telegum/tgx'
@@ -5,7 +6,7 @@ import type { EditMessageOptions, MessageContent, SendMessageOptions } from './t
 import { tgxToMessageContent } from './tgx'
 
 type SendTo = (chatId: number | string, threadId?: number) => Promise<Message>
-type EditTo = (newMessage: TgxElement) => Promise<Message>
+type EditTo<M = Message> = (newMessage: TgxElement) => Promise<M>
 
 export interface MessagesFlavor {
   send: (message: TgxElement) => ({
@@ -16,9 +17,12 @@ export interface MessagesFlavor {
   })
   edit: (chatId: number | string, messageId: number) => ({
     to: EditTo
-    with: (options: EditMessageOptions) => ({
-      to: EditTo
-    })
+    with: {
+      // When ignoring "message is not modified" error, it's not more guaranteed
+      // that the message will be returned.
+      (options: EditMessageOptions & { ignoreNotModifiedError: true }): { to: EditTo<void> }
+      (options: EditMessageOptions & { ignoreNotModifiedError?: false }): { to: EditTo }
+    }
   })
 }
 
@@ -57,16 +61,31 @@ export async function messages<C extends Context & MessagesFlavor>(ctx: C, next:
         messageId,
       })
     },
-    with: (options: EditMessageOptions) => ({
+    with: (options: EditMessageOptions & { ignoreNotModifiedError?: boolean }) => ({
       to: async (newMessage: TgxElement) => {
         const content = tgxToMessageContent(newMessage)
-        return editMessageContent({
-          api: ctx.api,
-          content,
-          chatId,
-          messageId,
-          options,
-        })
+
+        try {
+          const result = await editMessageContent({
+            api: ctx.api,
+            content,
+            chatId,
+            messageId,
+            options,
+          })
+          if (!options.ignoreNotModifiedError)
+            return result as any
+        }
+        catch (error) {
+          if (
+            options.ignoreNotModifiedError
+            && error instanceof GrammyError
+            && error.error_code === 400
+            && error.description.toLowerCase().includes('not modified')
+          ) return
+
+          throw error
+        }
       },
     }),
   })
