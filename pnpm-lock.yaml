@@ -36,8 +36,8 @@ importers:
   packages/buttons:
     dependencies:
       '@telegum/tgx':
-        specifier: ^0.2.0
-        version: 0.2.0
+        specifier: ^0.2.1
+        version: 0.2.1
       grammy:
         specifier: ^1.22.4
         version: 1.22.4
@@ -55,8 +55,8 @@ importers:
   packages/messages:
     dependencies:
       '@telegum/tgx':
-        specifier: ^0.2.0
-        version: 0.2.0
+        specifier: ^0.2.1
+        version: 0.2.1
       grammy:
         specifier: ^1.22.4
         version: 1.22.4
@@ -1179,8 +1179,8 @@ packages:
       - typescript
     dev: true
 
-  /@telegum/tgx@0.2.0:
-    resolution: {integrity: sha512-F6perTbDDur7wopIpxreBGFTzMSrc2Sp/AaaTrfNhyRzr8lNuApdhE6RFmn0n8spBwGAZ4S1XJYQ4wfFQXEKng==}
+  /@telegum/tgx@0.2.1:
+    resolution: {integrity: sha512-17mhEkEwwH2zIiXRwstfd0BgHOYCvwmGzqXAtrYtn5cVbFc+hzMAyDOzudtGO9SgNsJvr4rtWyuLV4Yfubh0RA==}
     dev: false
 
   /@tufjs/canonical-json@2.0.0:
