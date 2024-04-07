@@ -79,6 +79,8 @@ function tgxToKeyboard(tgx: TgxKeyboardElement): InlineKeyboard {
           keyboard.text(child.text, child.data)
         else if (child.url)
           keyboard.url(child.text, child.url)
+        else if (child.loginUrl)
+          keyboard.login(child.text, child.loginUrl)
         else
           throw new Error('Ambiguous JSX button')
         break

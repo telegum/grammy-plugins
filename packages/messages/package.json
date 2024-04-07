@@ -25,7 +25,7 @@
     "typecheck": "tsc --noEmit"
   },
   "peerDependencies": {
-    "@telegum/tgx": "^0.1.0",
+    "@telegum/tgx": "^0.2.0",
     "grammy": "^1.22.4"
   },
   "devDependencies": {
