@@ -91,7 +91,7 @@ export async function messages<C extends Context & MessagesFlavor>(ctx: C, next:
   return next()
 }
 
-function sendMessageContent({
+export function sendMessageContent({
   api,
   content,
   chatId,
@@ -135,7 +135,7 @@ function sendMessageContent({
   }
 }
 
-function editMessageContent({
+export function editMessageContent({
   api,
   content,
   chatId,
