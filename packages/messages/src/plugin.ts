@@ -6,7 +6,7 @@ import type { EditMessageOptions, MessageContent, SendMessageOptions } from './t
 import { tgxToMessageContent } from './tgx'
 
 type SendTo = (chatId: number | string, threadId?: number) => Promise<Message>
-type EditTo<M = Message> = (newMessage: TgxElement) => Promise<M>
+type EditTo<M> = (newMessage: TgxElement) => Promise<M>
 
 export interface MessagesFlavor {
   send: (message: TgxElement) => ({
@@ -16,12 +16,12 @@ export interface MessagesFlavor {
     })
   })
   edit: (chatId: number | string, messageId: number) => ({
-    to: EditTo
+    to: EditTo<Message>
     with: {
       // When ignoring "message is not modified" error, it's not more guaranteed
       // that the message will be returned.
-      (options: EditMessageOptions & { ignoreNotModifiedError: true }): { to: EditTo<void> }
-      (options: EditMessageOptions & { ignoreNotModifiedError?: false }): { to: EditTo }
+      (options: EditMessageOptions & { ignoreNotModifiedError: true }): { to: EditTo<Message | undefined> }
+      (options: EditMessageOptions & { ignoreNotModifiedError?: false }): { to: EditTo<Message> }
     }
   })
 }
@@ -66,15 +66,13 @@ export async function messages<C extends Context & MessagesFlavor>(ctx: C, next:
         const content = tgxToMessageContent(newMessage)
 
         try {
-          const result = await editMessageContent({
+          return await editMessageContent({
             api: ctx.api,
             content,
             chatId,
             messageId,
             options,
-          })
-          if (!options.ignoreNotModifiedError)
-            return result as any
+          }) as any
         }
         catch (error) {
           if (
